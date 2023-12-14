@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Hedaer-->
+  <%- include('layouts/header')-%>
+  <head>
+    <title>Dashboard</title>
+  </head>
+
+  <body>
+    <!-- Navigation-->
+    <%- include('layouts/navbar')-%>
+    <!-- Page Header-->
+    <header
+      class="masthead"
+      style="background-image: url('assets/img/examiner-bg.png')"
+    >
+      <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+          <div class="col-md-25 col-lg-28 col-xl-17">
+            <div class="site-heading">
+              <h1>DRIVER STATUS</h1>
+              <span class="subheading">List of all Examiner</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="form-floating" style="width: 50%; margin: 0 auto">
+      <select
+        id="filter"
+        name="filter"
+        class="form-select"
+        onchange="getDriverStatus()"
+      >
+        <option value="All" selected>All</option>
+        <option value="Pass">Pass</option>
+        <option value="Fail">Fail</option>
+      </select>
+      <label for="filter">Filter</label>
+    </div>
+    <br />
+
+    <!-- Main Content-->
+    <table id="drivers"></table>
+
+    <!-- Footer-->
+    <%- include('layouts/footer')-%>
+    <!-- Scripts-->
+    <%- include('layouts/scripts')-%>
+  </body>
+
+  <script>
+    async function retrieveDriverStatus() {
+      let passCriteria;
+      let statusFilter = document.getElementById("filter");
+      let driverTable = document.getElementById("drivers");
+      let tableContent =
+        "<tr><th>NAME</th><th>LICENCE NUMBER</th><th>RESULT</th></tr>";
+
+      if (statusFilter.value !== "All") {
+        passCriteria = statusFilter.value === "Pass";
+      }
+
+      await $.ajax({
+        url: "/GetDriverStatus?pass=" + passCriteria,
+        type: "GET",
+        success: function (data) {
+          data = JSON.parse(data);
+          data.forEach((driver) => {
+            tableContent += `<tr><td>${driver.firstName}, ${
+              driver.lastName
+            }</td><td>${driver.licenceNo}</td><td>${
+              driver.pass ? "Pass" : "Fail"
+            }</td></tr>`;
+          });
+        },
+        error: function (err) {},
+      });
+      driverTable.innerHTML = tableContent;
+    }
+
+    $(window).on("load", async function () {
+      await retrieveDriverStatus();
+    });
+  </script>
+</html>

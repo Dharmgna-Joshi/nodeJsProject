@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Hedaer-->
+<%- include('layouts/header')-%>
+
+    <head>
+        <title>G</title>
+    </head>
+
+    <body>
+        <!-- Navigation-->
+        <%- include('layouts/navbar')-%>
+            <!-- Page Header-->
+            <header class="masthead" style="background-image: url('assets/img/g-bg.jpg')">
+                <div class="container position-relative px-4 px-lg-5">
+                    <div class="row gx-4 gx-lg-5 justify-content-center">
+                        <div class="col-md-10 col-lg-8 col-xl-7">
+                            <div class="page-heading">
+                                <h1>G TEST</h1>
+                                <% if(typeof personalDetail !='undefined' ) { %>
+                                    <span class="subheading">User Data</span>
+                                    <% } else { %>
+                                        <span class="subheading">No User Data Found</span>
+                                        <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main Content-->
+            <main class="mb-4">
+                <div class="container px-4 px-lg-5">
+                    <div class="row gx-4 gx-lg-5 justify-content-center">
+                        <div class="col-md-10 col-lg-8 col-xl-7">
+                            <div class="my-5">
+                                <% if(typeof error !='undefined' ) { %>
+                                    <div class="alert alert-warning alert-dismissible fade show">
+                                        <%= error %>
+                                    </div>
+                                    <% } %>
+
+                                        <% if(typeof personalDetail !='undefined' ) { %>
+                                            <form id="gForm">
+
+                                                <span class="subheading">Personal Details</span> <br /><br />
+                                                <!-- First Name - String -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="firstName" name="firstName"
+                                                        type="text" placeholder="Enter your first name..."
+                                                        data-sb-validations="required" readonly value="<%=
+                                                        personalDetail.firstName %>" />
+                                                    <label for=" firstName">First Name</label>
+                                                </div>
+                                                <!-- Last Name - String -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="lastName" name="lastName"
+                                                        type="text" placeholder="Enter your last name..."
+                                                        data-sb-validations="required" readonly value="<%=
+                                                        personalDetail.lastName %>" />
+                                                    <label for="lastName">Last Name</label>
+                                                </div>
+                                                <!-- Licence Number - String -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="licenceNo" name="licenceNo"
+                                                        type="text" placeholder="Enter your Licence Number..."
+                                                        data-sb-validations="required" readonly value="<%=
+                                                        personalDetail.licenceNo %>" />
+                                                    <label for="licenceNo">Licence Number</label>
+                                                </div>
+                                                <!-- Age - Number -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="age" name="age" type="number"
+                                                        placeholder="Enter your Age..." data-sb-validations="required"
+                                                        readonly value="<%=personalDetail.age %>">
+                                                    <label for="age">Age</label>
+                                                </div>
+                                                <!-- Date Of Birth - Date -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="dob" name="dob" type="date"
+                                                        placeholder="Enter your Date Of Birth..."
+                                                        data-sb-validations="required" readonly
+                                                        value="<%=personalDetail.dob %>" />
+                                                    <label for="dob">Date Of Birth</label>
+                                                </div>
+
+                                                <br /><br /><span class="subheading">Car Details</span> <br /><br />
+
+                                                <!-- Car details > Make - String -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="make" name="make" type="text"
+                                                        placeholder="Enter your car's make..."
+                                                        data-sb-validations="required" value="<%=
+                                                        personalDetail.car_details.make %>" readonly />
+                                                    <label for="make">Make</label>
+                                                    <div class="invalid-feedback" data-sb-feedback="make:required">A
+                                                        make
+                                                        is
+                                                        required.</div>
+                                                </div>
+                                                <!-- Car details > Model - String -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="model" name="model" type="text"
+                                                        placeholder="Enter your car's model..."
+                                                        data-sb-validations="required" value="<%=
+                                                        personalDetail.car_details.model %>" readonly />
+                                                    <label for="model">Model</label>
+                                                    <div class="invalid-feedback" data-sb-feedback="model:required">A
+                                                        model
+                                                        is
+                                                        required.</div>
+                                                </div>
+                                                <!-- Car details > Year - Number -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="year" name="year" type="number"
+                                                        placeholder="Enter your car's manufacturing year..."
+                                                        data-sb-validations="required"
+                                                        value="<%= personalDetail.car_details.year %>" readonly />
+                                                    <label for="year">Year</label>
+                                                    <div class="invalid-feedback" data-sb-feedback="year:required">A
+                                                        year
+                                                        is
+                                                        required.</div>
+                                                </div>
+                                                <!-- Car details > Plat number - String -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="plat_number" name="plat_number"
+                                                        type="text" placeholder="Enter your car's plat number..."
+                                                        data-sb-validations="required" value="<%=
+                                                        personalDetail.car_details.plat_number %>" readonly />
+                                                    <label for="plat_number">Plat Number</label>
+                                                    <div class="invalid-feedback"
+                                                        data-sb-feedback="plat_number:required">A
+                                                        plat
+                                                        number
+                                                        is
+                                                        required.</div>
+                                                </div>
+                                                <br />
+                                            </form>
+                                            <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <!-- Footer-->
+            <%- include('layouts/footer')-%>
+                <!-- Scripts-->
+                <%- include('layouts/scripts')-%>
+    </body>
+
+</html>

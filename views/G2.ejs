@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Hedaer-->
+<%- include('layouts/header')-%>
+
+    <head>
+        <title>G2</title>
+    </head>
+
+    <body>
+        <!-- Navigation-->
+        <%- include('layouts/navbar')-%>
+            <!-- Page Header-->
+            <header class="masthead" style="background-image: url('assets/img/g2-bg.jpg')">
+                <div class="container position-relative px-4 px-lg-5">
+                    <div class="row gx-4 gx-lg-5 justify-content-center">
+                        <div class="col-md-10 col-lg-8 col-xl-7">
+                            <div class="page-heading">
+                                <h1>
+                                    <%=personalDetail.testType%>
+                                </h1>
+                                <span class="subheading">Please confirm your information</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- Main Content-->
+            <main class="mb-4">
+                <div class="container px-4 px-lg-5">
+                    <div class="row gx-4 gx-lg-5 justify-content-center">
+                        <span class="fst-italic">Our unique software monitors cancellations in real-time, 24/7. We're constantly searching
+                            for openings, day and night, and we book your driver's test appointment the moment a slot
+                            that fits your request becomes available.</span>
+                            <div class="col-md-10 col-lg-8 col-xl-7">
+                                <div class="my-5">
+
+                                    <% if(typeof error !='undefined' ) { %>
+                                        <div class="alert alert-warning alert-dismissible fade show">
+                                            <%= error %>
+                                        </div>
+                                        <% } else { %>
+
+                                            <!-- Form Start-->
+                                            <form id="g2Form" action="/G2" method="POST"
+                                                data-sb-form-api-token="API_TOKEN">
+
+                                                <input id="testType" name="testType" type="hidden"
+                                                    value="<%=personalDetail.testType%>" %>
+
+                                                <span class="subheading">Personal Details</span> <br /><br />
+                                                <!-- First Name - String -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="firstName" name="firstName"
+                                                        type="text" placeholder="Enter your first name..."
+                                                        data-sb-validations="required" required <%
+                                                        if(personalDetail.firstName!=undefined) {%> readonly value="<%=
+                                                        personalDetail.firstName %>" <% } %>
+                                                            />
+                                                            <label for=" firstName">First Name</label>
+                                                            <div class="invalid-feedback"
+                                                                data-sb-feedback="firstName:required">A
+                                                                first name
+                                                                is
+                                                                required.</div>
+                                                </div>
+                                                <!-- Last Name - String -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="lastName" name="lastName"
+                                                        type="text" placeholder="Enter your last name..."
+                                                        data-sb-validations="required" required <%
+                                                        if(personalDetail.lastName!=undefined) {%> readonly
+                                                    value="<%= personalDetail.lastName %>" <% } %> />
+                                                            <label for="lastName">Last Name</label>
+                                                            <div class="invalid-feedback"
+                                                                data-sb-feedback="lastName:required">A
+                                                                last name
+                                                                is
+                                                                required.</div>
+                                                </div>
+                                                <!-- Licence Number - String -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="licenceNo" name="licenceNo"
+                                                        type="text" placeholder="Enter your Licence Number..."
+                                                        data-sb-validations="required" required <%
+                                                        if(personalDetail.licenceNo!=undefined) {%> readOnly value="<%=
+                                                        personalDetail.licenceNo %>" <% } %> />
+                                                            <label for="licenceNo">Licence Number</label>
+                                                            <div class="invalid-feedback"
+                                                                data-sb-feedback="licenceNo:required">A
+                                                                licence
+                                                                number
+                                                                is
+                                                                required.</div>
+                                                </div>
+                                                <!-- Age - Number -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="age" name="age" type="number"
+                                                        placeholder="Enter your Age..." data-sb-validations="required"
+                                                        <% if(personalDetail.age!=undefined) {%> readonly value="<%=
+                                                        personalDetail.age %>"
+                                                        required <% } %>/>
+                                                            <label for="age">Age</label>
+                                                            <div class="invalid-feedback"
+                                                                data-sb-feedback="age:required">A
+                                                                age
+                                                                is
+                                                                required.</div>
+                                                </div>
+                                                <!-- Date Of Birth - Date -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="dob" name="dob" type="date"
+                                                        placeholder="Enter your Date Of Birth..."
+                                                        data-sb-validations="required" required <%
+                                                        if(personalDetail.dob!=undefined) {%> style="display:none;"
+                                                    value="<%= personalDetail.dob %>" <% } %>/>
+
+                                                            <input class="form-control" id="dobString" type="string"
+                                                                placeholder="Enter your Date Of Birth..."
+                                                                data-sb-validations="required" required <%
+                                                                if(personalDetail.dob!=undefined) {%>
+                                                            style="display:block;"
+                                                            readOnly
+                                                            value="<%= personalDetail.dob %>" <% } else { %>
+                                                                    style="display:none;" <% } %>
+                                                                        />
+                                                                        <label for="dob">Date Of Birth</label>
+                                                                        <div class="invalid-feedback"
+                                                                            data-sb-feedback="dob:required">A
+                                                                            date of
+                                                                            birth
+                                                                            is
+                                                                            required.</div>
+                                                </div>
+
+                                                <br /><br /><span class="subheading">Car Details</span> <br /><br />
+
+                                                <!-- Car details > Make - String -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="make" name="make" type="text"
+                                                        placeholder="Enter your car's make..."
+                                                        data-sb-validations="required" required <%
+                                                        if(personalDetail!=undefined) {%> value="<%=
+                                                        personalDetail.car_details.make %>" <% } %>/>
+                                                            <label for="make">Make</label>
+                                                            <div class="invalid-feedback"
+                                                                data-sb-feedback="make:required">A
+                                                                make
+                                                                is
+                                                                required.</div>
+                                                </div>
+                                                <!-- Car details > Model - String -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="model" name="model" type="text"
+                                                        placeholder="Enter your car's model..."
+                                                        data-sb-validations="required" required <%
+                                                        if(personalDetail!=undefined) {%> value="<%=
+                                                        personalDetail.car_details.model %>" <% } %> />
+                                                            <label for="model">Model</label>
+                                                            <div class="invalid-feedback"
+                                                                data-sb-feedback="model:required">
+                                                                A model
+                                                                is
+                                                                required.</div>
+                                                </div>
+                                                <!-- Car details > Year - Number -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="year" name="year" type="number"
+                                                        placeholder="Enter your car's manufacturing year..."
+                                                        data-sb-validations="required" required <%
+                                                        if(personalDetail!=undefined) {%>
+                                                    value="<%= personalDetail.car_details.year %>" <% } %> />
+                                                            <label for="year">Year</label>
+                                                            <div class="invalid-feedback"
+                                                                data-sb-feedback="year:required">A
+                                                                year
+                                                                is
+                                                                required.</div>
+                                                </div>
+                                                <!-- Car details > Plat number - String -->
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="plat_number" name="plat_number"
+                                                        type="text" placeholder="Enter your car's plat number..."
+                                                        data-sb-validations="required" required <%
+                                                        if(personalDetail!=undefined) {%> value="<%=
+                                                        personalDetail.car_details.plat_number %>" <% } %> />
+                                                            <label for="plat_number">Plat Number</label>
+                                                            <div class="invalid-feedback"
+                                                                data-sb-feedback="plat_number:required">A
+                                                                plat
+                                                                number
+                                                                is
+                                                                required.</div>
+                                                </div>
+                                                <br />
+
+                                                <br /><br /><span class="subheading">Book Appointment</span>
+                                                <br /><br />
+
+                                                <div class="form-floating">
+                                                    <input class="form-control date" id="dateSlot" name="dateSlot"
+                                                        type="date" placeholder="Enter your appointment date..."
+                                                        data-sb-validations="required" required <%
+                                                        if(timeSlot!=undefined) {%> style="display:none" readonly=true
+                                                    value="<%= timeSlot.date %>
+                                                        " <% } %> />
+
+                                                            <input class="form-control" id="dateSlotString"
+                                                                type="string" data-sb-validations="required" required <%
+                                                                if(timeSlot!=undefined) {%> readonly=true value="<%=
+                                                                timeSlot.date.toLocaleDateString("en-US") %>
+                                                                " <% } else { %> style="display:none" <%}%>/>
+
+                                                                        <label for="dateSlot">Appointment Date</label>
+                                                                        <div class="invalid-feedback"
+                                                                            data-sb-feedback="dateSlot:required">
+                                                                            An
+                                                                            appointment date
+                                                                            is
+                                                                            required.</div>
+                                                </div>
+
+                                                <div class="form-floating">
+                                                    <select id="timeSlot" name="timeSlot" class="form-select" required
+                                                        <% if(timeSlot!=undefined) {%> style="display:none" value="<%=
+                                                            timeSlot._id %>
+                                                            " <% } %> >
+                                                    </select>
+                                                    <input class="form-control" id="timeSlotString" type="string" <%
+                                                        if(timeSlot!=undefined) {%> style="display:
+                                                    block;" readonly=true value="
+                                                    <%= timeSlot.time.trim() %>
+                                                        " <% } else { %> style="display: none;" <%}%>/>
+                                                                <label for="timeSlot">Appointment Time</label>
+                                                                <div class="invalid-feedback"
+                                                                    data-sb-feedback="timeSlot:required">
+                                                                    An
+                                                                    appointment time is required.
+                                                                </div>
+                                                                <input type="hidden" id="timeSlotVal" <%
+                                                                    if(timeSlot!=undefined) {%>value="<%= timeSlot._id
+                                                                    %>
+                                                                    " <% } %> />
+                                                </div>
+
+                                                <br /><br /><span class="subheading">Examiner Comment</span>
+                                                <br /><br />
+
+                                                <div class="form-floating">
+                                                    <input class="form-control" id="comments" name="comments"
+                                                        type="text" data-sb-validations="required" required
+                                                        readonly="true" <% if(personalDetail!=undefined) {%>
+                                                    value="<%= personalDetail.comments %>" <% } %> />
+                                                            <label for="comments">Comment</label>
+                                                </div>
+
+                                                <div style="margin:20px 0px;">
+                                                    <input type="checkbox" id="pass" name="pass" disabled
+                                                        <%if(personalDetail.pass) {%> checked <%}%> >
+                                                        <label for="pass">Pass</label>
+                                                </div>
+
+                                                <!-- Submit Button-->
+                                                <button class="btn btn-primary text-uppercase" id="submitButton"
+                                                    type="submit" onclick="saveUserData()">Submit</button>
+                                            </form>
+                                            <% } %>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </main>
+            <!-- Footer-->
+            <%- include('layouts/footer')-%>
+                <!-- Scripts-->
+                <%- include('layouts/scripts')-%>
+                    <script type="text/javascript">
+                        const dateSlot = document.getElementById('dateSlot');
+
+                        async function getAvailAppointments() {
+                            $.ajax({
+                                url: "/GetAvailSlotsForBook?dateSlot=" + dateSlot.value, type: "GET",
+                                success: function (result) {
+                                    const timeSlot = document.getElementById('timeSlot');
+                                    let dropdownStr = "";
+                                    if (dateSlot.readOnly === true) {
+                                        const timeSlotVal = document.getElementById('timeSlotVal');
+                                        dropdownStr += "<option value=" + timeSlotVal.value + ">" + timeSlotVal.value + "</option>"
+                                    } else {
+                                        JSON.parse(result).forEach((val) => {
+                                            dropdownStr += "<option value=" + val._id + ">" + val.time + "</option>"
+                                        });
+                                    }
+                                    timeSlot.innerHTML = dropdownStr;
+                                },
+                                error: function (error) {
+                                }
+                            })
+                        }
+
+                        async function saveUserData() {
+                            const formElement = document.getElementById('g2Form');
+                            const data = {};
+                            for (const pair of new FormData(formElement)) {
+                                data[pair[0]] = pair[1];
+                            }
+
+                            $.ajax({
+                                url: "/G2",
+                                type: 'POST',
+                                data: JSON.stringify(data),
+                                contentType: 'application/json',
+                                success: function (response) {
+                                    location.reload();
+                                },
+                                error: function (error) {
+                                    console.error('Error:', error);
+                                }
+                            });
+                        };
+
+                        $(window).load(async function () {
+                            dateSlot.valueAsDate = new Date();
+                            await getAvailAppointments();
+                        });
+
+                        dateSlot.addEventListener('change', function () {
+                            getAvailAppointments();
+                        });
+
+                    </script>
+    </body>
+
+</html>

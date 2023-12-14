@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Hedaer-->
+  <%- include('layouts/header')-%>
+
+  <head>
+    <title>Dashboard</title>
+  </head>
+
+  <body>
+    <!-- Navigation-->
+    <%- include('layouts/navbar')-%>
+    <!-- Page Header-->
+    <header
+      class="masthead"
+      style="background-image: url('assets/img/status-bg.png')"
+    >
+      <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+          <div class="col-md-10 col-lg-8 col-xl-7">
+            <div class="site-heading">
+              <h1>EXAMINER</h1>
+              <span class="subheading">List of all Examiner</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="form-floating" style="width: 50%; margin: 0 auto">
+      <select
+        id="filter"
+        name="filter"
+        class="form-select"
+        onchange="showData()"
+      >
+        <option value="All" selected>All</option>
+        <option value="G2">G2</option>
+        <option value="G">G</option>
+      </select>
+      <label for="filter">Filter</label>
+    </div>
+    <br />
+
+    <!-- Main Content-->
+    <table id="drivers"></table>
+
+    <!-- Popup Container -->
+    <div id="popup-container">
+      <div id="popup-content">
+        <span class="close">&times;</span>
+        <br />
+        <h6>PERSONAL DETAILS</h6>
+        <input style="display: none" type="hidde" id="id" />
+        <p id="name"></p>
+        <p id="licenceNo"></p>
+        <p id="testType"></p>
+        <h6>CAR DETAILS</h6>
+        <p id="make"></p>
+        <p id="model"></p>
+        <p id="plat_number"></p>
+        <h6>DRIVER'S RESULT</h6>
+        <div class="form-floating">
+          <input
+            class="form-control"
+            id="comment"
+            type="text"
+            placeholder="Your comment..."
+          />
+          <label for="comment">Comment</label>
+        </div>
+        <div>
+          <input type="checkbox" id="pass" name="pass" />
+          <label for="pass">Pass</label>
+        </div>
+        <button id="popup-button">Update Data</button>
+      </div>
+    </div>
+
+    <!-- Footer-->
+    <%- include('layouts/footer')-%>
+    <!-- Scripts-->
+    <%- include('layouts/scripts')-%>
+    <script>
+      let popupBtn = document.getElementById("popup-button");
+      let popupDiv = document.getElementById("popup-container");
+
+      let closeBtn = document.getElementsByClassName("close")[0];
+
+      async function displayData() {
+        let filterOption = document.getElementById("filter");
+        let dataTable = document.getElementById("drivers");
+        let htmlContent =
+          "<tr><th>Name</th><th>Appointment Date</th><th>Appointment Time</th><th>Type</th><th></th></tr>";
+
+        await $.ajax({
+          url:
+            "/ExaminerList?type=" +
+            (filterOption.value === "All" ? undefined : filterOption.value),
+          type: "GET",
+          success: function (data) {
+            data = JSON.parse(data);
+            data.forEach((item) => {
+              htmlContent += `<tr><td>${item.firstName}, ${item.lastName}</td><td>${item.appointment[0].date}</td><td>${item.appointment[0].time}</td><td>${item.testType}</td><td><input type='button' class='detail' id=${item._id} value='Details' onclick=displayDetails(this) /></td></tr>`;
+            });
+          },
+          error: function (err) {},
+        });
+        dataTable.innerHTML = htmlContent;
+      }
+
+      async function displayDetails(btn) {
+        $.ajax({
+          url: "/DriverDetails?id=" + btn.id,
+          type: "GET",
+          success: function (data) {
+            data = JSON.parse(data);
+            document.getElementById("id").value = btn.id;
+            document.getElementById("name").textContent =
+              "Name: " + data.firstName + ", " + data.lastName;
+            document.getElementById("licenceNo").textContent =
+              "Licence No: " + data.licenceNo;
+            document.getElementById("testType").textContent =
+              "Test Type: " + data.testType;
+            document.getElementById("make").textContent =
+              "Make: " + data.car_details.make;
+            document.getElementById("model").textContent =
+              "Model: " + data.car_details.model;
+            document.getElementById("plat_number").textContent =
+              "Plat No: " + data.car_details.plat_number;
+            document.getElementById("comment").value = data.comments || "";
+            document.getElementById("pass").checked = data.pass;
+            popupDiv.style.display = "flex";
+          },
+          error: function (err) {
+            console.log(err);
+          },
+        });
+      }
+
+      closeBtn.onclick = function () {
+        popupDiv.style.display = "none";
+      };
+
+      popupBtn.onclick = async function () {
+        let payload = {
+          id: document.getElementById("id").value,
+          comment: document.getElementById("comment").value,
+          pass: document.getElementById("pass").checked,
+        };
+        $.ajax({
+          url: "/UpdateDriverStatus",
+          type: "POST",
+          data: JSON.stringify(payload),
+          contentType: "application/json",
+          success: function (response) {
+            location.reload();
+          },
+          error: function (err) {
+            console.error("Error:", err);
+          },
+        });
+      };
+
+      $(window).on("load", async () => {
+        await displayData();
+      });
+    </script>
+  </body>
+</html>

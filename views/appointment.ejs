@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- Hedaer-->
+  <%- include('layouts/header')-%>
+
+  <head>
+    <title>Login</title>
+  </head>
+
+  <body>
+    <!-- Navigation-->
+    <%- include('layouts/navbar')-%>
+    <!-- Page Header-->
+    <header
+      class="masthead"
+      style="background-image: url('assets/img/appointment-bg.png')"
+    >
+      <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+          <div class="col-md-10 col-lg-8 col-xl-7">
+            <div class="page-heading">
+              <h1>Appointment</h1>
+              <span class="subheading">Available Appointments</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- Main Content-->
+    <main class="mb-4">
+      <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+          <div class="col-md-10 col-lg-8 col-xl-7">
+            <div class="my-5 tab-content">
+              <% if(typeof error !='undefined' ) { %>
+              <div class="alert alert-warning alert-dismissible fade show">
+                <%= error %>
+              </div>
+              <% } %>
+
+              <!-- Form starts-->
+              <form
+                id="appointment"
+                action="/AvailAppointment"
+                method="POST"
+                data-sb-form-api-token="API_TOKEN"
+              >
+                <!-- Appointment - Date -->
+                <div class="form-floating">
+                  <input
+                    class="form-control date"
+                    id="dateSlot"
+                    name="dateSlot"
+                    type="date"
+                    placeholder="Enter your appointment date..."
+                    data-sb-validations="required"
+                    required
+                  />
+                  <label for="dateSlot">Date</label>
+                  <div
+                    class="invalid-feedback"
+                    data-sb-feedback="dateSlot:required"
+                  >
+                    An appointment date is required.
+                  </div>
+                </div>
+                <br />
+                <div>
+                  <% if(typeof timeSlotList !='undefined' ) { %> <%
+                  timeSlotList.forEach((time)=>{ %>
+                  <button
+                    id="<%=time%>"
+                    class="correct timeslot"
+                    value="<%=time%>"
+                    name="timeSlot"
+                    data-id="<%=time%>"
+                    style="margin: 10px"
+                  >
+                    <%=time%>
+                  </button>
+                  <%})%> <% } %>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <!-- Footer-->
+    <%- include('layouts/footer')-%>
+    <!-- Scripts-->
+    <%- include('layouts/scripts')-%>
+    <script type="text/javascript">
+      const appointmentDate = document.getElementById("dateSlot");
+
+      async function updateAppointmentAvailability() {
+        $.ajax({
+          url: `/AppointmentByDate?dateSlot=${appointmentDate.value}`,
+          type: "GET",
+          success: function (data) {
+            JSON.parse(data).forEach((appointment) => {
+              document.getElementById(appointment.time).disabled = true;
+            });
+          },
+          error: function (error) {},
+        });
+      }
+
+      $(window).on("load", async () => {
+        appointmentDate.valueAsDate = new Date();
+        await updateAppointmentAvailability();
+      });
+
+      appointmentDate.addEventListener("change", () => {
+        Array.from(document.getElementsByTagName("button")).forEach(
+          (button) => {
+            button.disabled = false;
+          }
+        );
+        updateAppointmentAvailability();
+      });
+    </script>
+  </body>
+</html>
